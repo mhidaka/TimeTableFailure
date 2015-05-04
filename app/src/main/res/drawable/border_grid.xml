@@ -1,0 +1,32 @@
+<?xml version="1.0" encoding="utf-8"?>
+<selector xmlns:android="http://schemas.android.com/apk/res/android">
+    <!-- ボタンが押されたときの定義 -->
+    <item android:state_pressed="true">
+        <shape android:shape="rectangle">
+
+            <!-- 色 -->
+            <solid android:color="#9E9E9E" />
+            <!-- 枠線の形状 -->
+            <stroke android:width="2dp" android:color="#000000" />
+            <!-- パディング -->
+            <!--<padding android:bottom="2px" android:left="2px" android:right="2px" android:top="2px" />-->
+            <!-- 角の半径を -->
+            <!--<corners android:radius="2px" />-->
+    </shape>
+</item>
+    <!-- ボタンが押されていないときの定義 -->
+    <item xmlns:android="http://schemas.android.com/apk/res/android" android:state_pressed="false">
+        <shape android:shape="rectangle">
+
+            <!-- 色 -->
+            <solid android:color="#E3F2FD" />
+            <!-- 枠線の形状 -->
+            <stroke android:width="2dp" android:color="#000000" />
+            <!-- パディング -->
+            <!--<padding android:bottom="2px" android:left="2px" android:right="2px" android:top="2px" />-->
+            <!-- 角の半径を -->
+            <!--<corners android:radius="2px" />-->
+        </shape>
+    </item>
+
+</selector>
