@@ -22,9 +22,9 @@ public class ClassTable {
     public ClassTable(String day, String time) {
         this.day = day;
         this.time = time;
-        this.name = "";
-        this.room = "";
-        this.teacher = "";
+        this.name = "test_name";
+        this.room = "test_room";
+        this.teacher = "test_teacher";
         this.hasAlarm = false;
         this.alarm = 0;
     }
@@ -32,9 +32,9 @@ public class ClassTable {
     public ClassTable() {
         this.day = "";
         this.time = "";
-        this.name = "";
-        this.room = "";
-        this.teacher = "";
+        this.name = "test_name";
+        this.room = "test_room";
+        this.teacher = "test_teacher";
         this.hasAlarm = false;
         this.alarm = 0;
     }

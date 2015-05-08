@@ -53,8 +53,8 @@ public class TableHelper extends SQLiteOpenHelper{
     public void onCreate(SQLiteDatabase db) {
         db.execSQL(SQL_CREATE_TABLE);
 
-        ArrayList<ClassTable> defaultList = new ArrayList<>();
-        this.setDefaultTable(defaultList, db);
+        ArrayList<ClassTable> list = new ArrayList<>();
+        setDefaultTable(list, db);
     }
 
     public ArrayList<ClassTable> setDefaultTable(ArrayList<ClassTable> list, SQLiteDatabase db) {
@@ -62,30 +62,15 @@ public class TableHelper extends SQLiteOpenHelper{
             for (String day: DAYS) {
                 // 各行に曜日と時間をセットして、かつ授業名にテストとしてday + timeをセット
                 // TODO 授業名を空に！
-                ClassTable classTable = new ClassTable(day, time, day + time, "", "", false, 0);
-
-                ContentValues values = new ContentValues();
-                values.put(KEY_DAY, classTable.getDay());
-                values.put(KEY_TIME, classTable.getTime());
-                values.put(KEY_NAME, classTable.getName());
-                values.put(KEY_TEACHER, classTable.getTeacher());
-                values.put(KEY_ROOM, classTable.getRoom());
-                values.put(KEY_HAS_ALARM, classTable.hasAlarm());
-                values.put(KEY_ALARM, classTable.getAlarm());
-                long id = db.insert(DB_NAME, null, values);
-                if (id == -1) {
-                    Log.v("Database", "Failed to insert classTable");
-                }
-                Log.d("TABLE HELPER", classTable.getDay() + classTable.getTime());
+                ClassTable classTable = new ClassTable(day, time, day + time, " ", " ", false, 0);
+                createClassTable(classTable, db);
                 list.add(classTable);
             }
         }
         return list;
     }
 
-    public void createClassTable(ClassTable classTable) {
-        SQLiteDatabase db = getWritableDatabase();
-
+    public void createClassTable(ClassTable classTable, SQLiteDatabase db) {
         ContentValues values = new ContentValues();
         values.put(KEY_DAY, classTable.getDay());
         values.put(KEY_TIME, classTable.getTime());
@@ -94,11 +79,10 @@ public class TableHelper extends SQLiteOpenHelper{
         values.put(KEY_ROOM, classTable.getRoom());
         values.put(KEY_HAS_ALARM, classTable.hasAlarm());
         values.put(KEY_ALARM, classTable.getAlarm());
-        long id = db.insert(DB_NAME, null, values);
+        long id = db.insert(TABLE_NAME, null, values);
         if (id == -1) {
             Log.v("Database", "Failed to insert classTable");
         }
-        db.close();
     }
 
     public ClassTable getClassTableById(int id) {
@@ -117,6 +101,7 @@ public class TableHelper extends SQLiteOpenHelper{
             return null;
         } else {
 
+            // index取得
             int dayIndex = cursor.getColumnIndex(KEY_DAY);
             int timeIndex = cursor.getColumnIndex(KEY_TIME);
             int nameIndex = cursor.getColumnIndex(KEY_NAME);
@@ -158,9 +143,9 @@ public class TableHelper extends SQLiteOpenHelper{
         String[] args = { String.valueOf(id) };
         Cursor cursor = db.query(TABLE_NAME, COLUMNS, where, args
                 , null, null, null, null);
+        cursor.moveToFirst();
+
         ClassTable classTable = new ClassTable();
-
-
 
         // index取得
         int dayIndex = cursor.getColumnIndex(KEY_DAY);
@@ -219,10 +204,10 @@ public class TableHelper extends SQLiteOpenHelper{
     }
 
     public String[] getDayAndTime(int id) {
-        String[] dayAndTime = new String[2];
+        String[] dayAndTime;
         int day = id % 6;
-        int time = (int)Math.ceil(id / 5);
-        dayAndTime = new String[]{ Integer.toString(day), Integer.toString(time) };
+        int time = (int)Math.floor(id / 5);
+        dayAndTime = new String[]{ DAYS[day - 1], TIMES[time - 1] };
         return dayAndTime;
     }
 
