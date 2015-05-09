@@ -7,7 +7,8 @@
         android:id="@+id/action_add_class_table"
         android:title="授業を追加"
         android:orderInCategory="100"
-        app:showAsAction="never" />
+        android:icon="@drawable/ic_action_new"
+        app:showAsAction="always" />
     <item
         android:id="@+id/action_drop_class_table"
         android:title="時間割を削除"
@@ -17,5 +18,6 @@
         android:id="@+id/action_settings"
         android:title="@string/action_settings"
         android:orderInCategory="100"
-        app:showAsAction="never" />
+        android:icon="@drawable/ic_action_settings"
+        app:showAsAction="ifRoom" />
 </menu>

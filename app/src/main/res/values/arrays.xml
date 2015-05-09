@@ -1,2 +1,31 @@
 <?xml version="1.0" encoding="utf-8"?>
-<resources></resources>
+<resources>
+    <string-array name="day">
+        <item>月曜</item>
+        <item>火曜</item>
+        <item>水曜</item>
+        <item>木曜</item>
+        <item>金曜</item>
+    </string-array>
+
+    <string-array name="time">
+        <item>1</item>
+        <item>2</item>
+        <item>3</item>
+        <item>4</item>
+        <item>5</item>
+        <item>6</item>
+    </string-array>
+
+    <string-array name="alarm">
+        <item>5分前</item>
+        <item>10分前</item>
+        <item>15分前</item>
+        <item>30分前</item>
+        <item>45分前</item>
+        <item>60分前</item>
+        <item>90分前</item>
+        <item>120分前</item>
+    </string-array>
+
+</resources>

@@ -1,29 +1,11 @@
 package jp.techinstitute.ti_046.timetablefailure;
 
 import android.app.AlertDialog;
-import android.app.DialogFragment;
-import android.content.Context;
-import android.content.DialogInterface;
-import android.support.v4.app.FragmentManager;
 import android.support.v7.app.ActionBarActivity;
-import android.support.v7.app.ActionBar;
-import android.support.v4.app.Fragment;
 import android.os.Bundle;
-import android.util.Log;
-import android.view.LayoutInflater;
 import android.view.Menu;
 import android.view.MenuItem;
-import android.view.View;
 import android.view.ViewGroup;
-import android.os.Build;
-import android.widget.AdapterView;
-import android.widget.ArrayAdapter;
-import android.widget.GridView;
-import android.widget.TextView;
-
-import java.util.ArrayList;
-import java.util.List;
-
 
 public class MainActivity extends ActionBarActivity {
 
@@ -52,6 +34,13 @@ public class MainActivity extends ActionBarActivity {
 
         switch (id) {
             case R.id.action_add_class_table:
+                // AlertDialog to create new ClassTable
+                AlertDialog.Builder builder = new AlertDialog.Builder(this);
+                // set dialog layout of add_fragment_dialog
+                ViewGroup container = (ViewGroup) findViewById(R.id.add_fragment_container);
+                builder.setView(getLayoutInflater().inflate(R.layout.fragment_add_dialog, container));
+                builder.setTitle("新規授業登録");
+                builder.show();
                 break;
             case R.id.action_drop_class_table:
                 break;
