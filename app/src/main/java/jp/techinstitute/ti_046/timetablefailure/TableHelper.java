@@ -65,6 +65,7 @@ public class TableHelper extends SQLiteOpenHelper{
                 ClassTable classTable = new ClassTable(day, time, day + time, " ", " ", false, 0);
                 createClassTable(classTable, db);
                 list.add(classTable);
+                Log.d("DEFAULT SET", "DONE" + classTable.getName());
             }
         }
         return list;
@@ -180,26 +181,27 @@ public class TableHelper extends SQLiteOpenHelper{
     }
 
     public int getId(String day, String time) {
-        int parseDay = 0;
+        int intDay = 0;
         int id;
         switch (day) {
             case "月曜":
-                parseDay = 0;
+                intDay = 1;
                 break;
             case "火曜":
-                parseDay = 1;
+                intDay = 2;
                 break;
             case "水曜":
-                parseDay = 2;
+                intDay = 3;
                 break;
             case "木曜":
-                parseDay = 3;
+                intDay = 4;
                 break;
             case "金曜":
-                parseDay = 4;
+                intDay = 5;
                 break;
         }
-        id = DAYS.length * parseDay + Integer.parseInt(time);
+        // id = (時間 - 1) * 曜日数(ここでは5) + 曜日(月曜から順に1, 2, 3, 4, 5)
+        id = ((Integer.parseInt(time) - 1) * DAYS.length) + intDay;
         return id;
     }
 

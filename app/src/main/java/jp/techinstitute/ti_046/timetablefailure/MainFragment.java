@@ -25,7 +25,8 @@ public class MainFragment extends android.support.v4.app.Fragment {
 
     private TableHelper helper;
     private ArrayList<ClassTable> list;
-    private GridAdapter adapter;
+    private GridView grid;
+    public GridAdapter adapter;
 
     public MainFragment() {
     }
@@ -33,8 +34,10 @@ public class MainFragment extends android.support.v4.app.Fragment {
     @Override
     public void onAttach(Activity activity) {
         helper = new TableHelper(getActivity());
-        list = setDefaultClassTable(helper); // listに月1から金6までセット
+        list = setArrayMyDatabase(helper); // listに月1から金6までセット
         adapter = new GridAdapter(getActivity(), 0, list); // GridAdapterの第二引数はlayout resource id
+        grid = new GridView(getActivity());
+
         super.onAttach(activity);
     }
 
@@ -43,8 +46,7 @@ public class MainFragment extends android.support.v4.app.Fragment {
                              Bundle savedInstanceState) {
         View rootView = inflater.inflate(R.layout.fragment_main, container, false);
 
-        GridView grid = (GridView) rootView.findViewById(R.id.grid);
-        list = setDefaultClassTable(helper); // listに月1から金6までセット
+        grid = (GridView) rootView.findViewById(R.id.grid);
         grid.setAdapter(adapter);
         grid.setOnItemClickListener(adapter);
         grid.setOnItemLongClickListener(adapter);
@@ -57,9 +59,18 @@ public class MainFragment extends android.support.v4.app.Fragment {
             for (String day: TableHelper.DAYS) {
                 ClassTable classTable = new ClassTable(day, time, day + time, "", "", false, 0);
                 helper.createClassTable(classTable, helper.getWritableDatabase());
-                Log.d("DEFAULT SET", "DONE" + classTable.getName());
+
                 list.add(classTable);
             }
+        }
+        return list;
+    }
+
+    public ArrayList<ClassTable> setArrayMyDatabase(TableHelper helper) {
+        ArrayList<ClassTable> list = new ArrayList<>();
+        for (int i = 1; i <= 30; i++) {
+            ClassTable classTable = helper.getClassTableById(i);
+            list.add(classTable);
         }
         return list;
     }
@@ -74,7 +85,7 @@ public class MainFragment extends android.support.v4.app.Fragment {
 
         @Override
         public View getView(int position, View convertView, ViewGroup parent) {
-            ClassTable classTable = getItem(position);
+            ClassTable classTable = helper.getClassTableById(position + 1);
             TextView textView = new TextView(getContext());
 
             // textViewの高さを、”親Viewの高さ/時限数”にセットして、背景にborder_grid指定

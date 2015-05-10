@@ -2,9 +2,13 @@ package jp.techinstitute.ti_046.timetablefailure;
 
 import android.app.AlertDialog;
 import android.content.DialogInterface;
+import android.support.v4.app.Fragment;
+import android.support.v4.app.FragmentManager;
+import android.support.v4.app.FragmentTransaction;
 import android.support.v7.app.ActionBarActivity;
 import android.os.Bundle;
 import android.text.SpannableStringBuilder;
+import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
@@ -14,6 +18,10 @@ import android.widget.Toast;
 
 public class MainActivity extends ActionBarActivity {
 
+    private final String MAIN_FRAGMENT_TAG = MainFragment.class.getName();
+    private FragmentManager manager;
+    private FragmentTransaction transaction;
+    private MainFragment mainFragment;
     private TableHelper helper;
 
     @Override
@@ -21,10 +29,12 @@ public class MainActivity extends ActionBarActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
         helper = new TableHelper(MainActivity.this);
+        manager = getSupportFragmentManager();
+        transaction = manager.beginTransaction();
+        mainFragment = new MainFragment();
         if (savedInstanceState == null) {
-            getSupportFragmentManager().beginTransaction()
-                    .add(R.id.container, new MainFragment())
-                    .commit();
+            transaction.add(R.id.container, mainFragment
+                    , MAIN_FRAGMENT_TAG).commit();
         }
     }
 
@@ -63,12 +73,10 @@ public class MainActivity extends ActionBarActivity {
                         classTable.setTime(getSpinnerItemSelected(spinnerTime));
                         classTable.setName(getStringOfEditText(editName));
                         classTable.setTeacher(getStringOfEditText(editTeacher));
-                        helper.createClassTable(classTable, helper.getWritableDatabase());
-
+                        helper.updateClassTable(classTable);
                         // TODO: もし追加した授業がその日の最初の授業なら、アラームセットするかダイアログ
 
-                        Toast.makeText(MainActivity.this, classTable.getName()
-                                + "が時間割に追加されました。", Toast.LENGTH_SHORT).show();
+                        Log.d("createClassTable:", classTable.getDay() + classTable.getTime() + classTable.getName());
                     }
                 });
                 builder.show();
