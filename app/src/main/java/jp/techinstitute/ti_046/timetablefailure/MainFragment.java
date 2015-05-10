@@ -134,9 +134,7 @@ public class MainFragment extends android.support.v4.app.Fragment {
                                 @Override
                                 public void onClick(DialogInterface dialogInterface, int i) {
                                     int classId = position + 1;
-                                    // TableHelperのgetDayAndTimeでidから曜日と時間を取得し、それに対応する授業削除
-                                    String[] day_time = helper.getDayAndTime(classId);
-                                    helper.deleteClassTable(day_time[0], day_time[1]);
+                                    helper.deleteClassTable(classId);
                                 }
                             });
                             deleteBuilder.setNegativeButton("キャンセル", new DialogInterface.OnClickListener() {

@@ -136,48 +136,8 @@ public class TableHelper extends SQLiteOpenHelper{
     }
 
     public ClassTable getClassTable(String day, String time) {
-        SQLiteDatabase db = getReadableDatabase();
-
-        // idで検索
-        String where = KEY_ID + "=?";
         int id = getId(day, time);
-        String[] args = { String.valueOf(id) };
-        Cursor cursor = db.query(TABLE_NAME, COLUMNS, where, args
-                , null, null, null, null);
-        cursor.moveToFirst();
-
-        ClassTable classTable = new ClassTable();
-
-        // index取得
-        int dayIndex = cursor.getColumnIndex(KEY_DAY);
-        int timeIndex = cursor.getColumnIndex(KEY_TIME);
-        int nameIndex = cursor.getColumnIndex(KEY_NAME);
-        int teacherIndex = cursor.getColumnIndex(KEY_TEACHER);
-        int roomIndex = cursor.getColumnIndex(KEY_ROOM);
-        int hasAlarmIndex = cursor.getColumnIndex(KEY_HAS_ALARM);
-        int alarmIndex = cursor.getColumnIndex(KEY_ALARM);
-
-        // 取得したindexを元にclassTableにデータをセット
-        classTable.setDay(cursor.getString(dayIndex));
-        classTable.setTime(cursor.getString(timeIndex));
-        classTable.setName(cursor.getString(nameIndex));
-        classTable.setTeacher(cursor.getString(teacherIndex));
-        classTable.setRoom(cursor.getString(roomIndex));
-        classTable.setAlarm(cursor.getInt(alarmIndex));
-
-        // hasAlarmだけはbooleanなので別処理
-        switch (cursor.getInt(hasAlarmIndex)) {
-            case 0:
-                classTable.setHasAlarm(false);
-                break;
-            case 1:
-                classTable.setHasAlarm(true);
-                break;
-        }
-        cursor.close();
-        db.close();
-
-        return classTable;
+        return getClassTableById(id);
     }
 
     public int getId(String day, String time) {
@@ -234,13 +194,13 @@ public class TableHelper extends SQLiteOpenHelper{
         db.close();
     }
 
-    public void deleteClassTable(String day, String time) {
+    public void deleteClassTable(int id) {
         // make an empty ClassTable and set it day and time
-        ClassTable classTable = new ClassTable();
-        classTable.setDay(day);
-        classTable.setTime(time);
+        ClassTable oldClassTable = getClassTableById(id);
+        ClassTable newClassTable = new ClassTable(oldClassTable.getDay(), oldClassTable.getTime());
+        newClassTable.setName("Deleted");
         // 空のデータに更新することで、削除による行と行の間に空行回避
-        updateClassTable(classTable);
+        updateClassTable(newClassTable);
     }
 
     public void dropTable() {
@@ -251,7 +211,10 @@ public class TableHelper extends SQLiteOpenHelper{
         } catch (SQLException e) {
             Log.e("ERROR", e.toString());
         }
+        // デフォルトデータベース作成
         db.execSQL(SQL_CREATE_TABLE);
+        ArrayList<ClassTable> list = new ArrayList<>();
+        setDefaultTable(list, db);
     }
 
     @Override

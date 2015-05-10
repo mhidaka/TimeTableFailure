@@ -53,7 +53,7 @@ public class MainActivity extends ActionBarActivity {
         switch (id) {
             case R.id.action_add_class_table:
                 // AlertDialog to create new ClassTable
-                AlertDialog.Builder builder = new AlertDialog.Builder(this);
+                AlertDialog.Builder addDialogBuilder = new AlertDialog.Builder(this);
                 // set dialog layout of add_fragment_dialog
                 View rootView = getLayoutInflater().inflate(R.layout.fragment_add_dialog, null);
                 // get views in rootView
@@ -63,9 +63,9 @@ public class MainActivity extends ActionBarActivity {
                 final EditText editName = (EditText) rootView.findViewById(R.id.edit_name);
                 final EditText editTeacher = (EditText) rootView.findViewById(R.id.edit_teacher);
 
-                builder.setView(rootView);
-                builder.setTitle("新規授業登録");
-                builder.setPositiveButton("追加", new DialogInterface.OnClickListener() {
+                addDialogBuilder.setView(rootView);
+                addDialogBuilder.setTitle("新規授業登録");
+                addDialogBuilder.setPositiveButton("追加", new DialogInterface.OnClickListener() {
                     @Override
                     public void onClick(DialogInterface dialogInterface, int i) {
                         ClassTable classTable = new ClassTable();
@@ -79,9 +79,21 @@ public class MainActivity extends ActionBarActivity {
                         Log.d("createClassTable:", classTable.getDay() + classTable.getTime() + classTable.getName());
                     }
                 });
-                builder.show();
+                addDialogBuilder.show();
                 break;
             case R.id.action_drop_class_table:
+                AlertDialog.Builder deleteDialogBuilder = new AlertDialog.Builder(this);
+                deleteDialogBuilder.setTitle("時間割を削除");
+                deleteDialogBuilder.setMessage("ほんとうに時間割をすべて削除しますか？");
+                deleteDialogBuilder.setPositiveButton("削除", new DialogInterface.OnClickListener() {
+                    @Override
+                    public void onClick(DialogInterface dialogInterface, int i) {
+                        helper.dropTable();
+
+                        Log.d("dropClassTable: ", "the table is dropped successfully");
+                    }
+                });
+                deleteDialogBuilder.show();
                 break;
             case R.id.action_settings:
         }
