@@ -79,9 +79,16 @@ public class TableHelper extends SQLiteOpenHelper{
         values.put(KEY_NAME, classTable.getName());
         values.put(KEY_TEACHER, classTable.getTeacher());
         values.put(KEY_ROOM, classTable.getRoom());
-        values.put(KEY_HAS_ALARM, classTable.hasAlarm());
         values.put(KEY_ALARM_HOUR, classTable.getAlarmHour());
         values.put(KEY_ALARM_MINUTE, classTable.getAlarmMinute());
+
+        // hasAlarmだけbooleanなので別処理
+        if (classTable.hasAlarm()) {
+            values.put(KEY_HAS_ALARM, 1); // true
+        } else if (!classTable.hasAlarm()) {
+            values.put(KEY_HAS_ALARM, 0); // false
+        }
+
         long id = db.insert(TABLE_NAME, null, values);
         if (id == -1) {
             Log.v("Database", "Failed to insert classTable");
@@ -186,6 +193,13 @@ public class TableHelper extends SQLiteOpenHelper{
         values.put(KEY_ROOM, classTable.getRoom());
         values.put(KEY_ALARM_HOUR, classTable.getAlarmHour());
         values.put(KEY_ALARM_MINUTE, classTable.getAlarmMinute());
+
+        // hasAlarmだけbooleanなので別処理
+        if (classTable.hasAlarm()) {
+            values.put(KEY_HAS_ALARM, 1);
+        } else if (!classTable.hasAlarm()) {
+            values.put(KEY_HAS_ALARM, 0);
+        }
 
         String where = KEY_ID + "=?";
         int id = getId(classTable.getDay(), classTable.getTime());

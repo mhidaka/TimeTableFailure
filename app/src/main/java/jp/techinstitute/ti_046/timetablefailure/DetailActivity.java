@@ -1,5 +1,6 @@
 package jp.techinstitute.ti_046.timetablefailure;
 
+import android.app.TimePickerDialog;
 import android.content.Intent;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentManager;
@@ -11,14 +12,21 @@ import android.view.MenuItem;
 import android.widget.CompoundButton;
 import android.widget.Switch;
 import android.widget.TextView;
+import android.widget.TimePicker;
+import android.widget.Toast;
 
 
 public class DetailActivity extends ActionBarActivity implements CompoundButton.OnCheckedChangeListener {
 
     private final String ARG_CLASS_ID = "class_id";
+    private final int[] DEFAULT_TIME = { 7, 0 };
     private int class_id;
 
+    private TableHelper helper;
+
     private FragmentManager manager;
+    private ClassTable classTable;
+    private TextView alertTextView;
 
     private static final String SET_ALARM_FRAGMENT_TAG = SetAlarmFragment.class.getName();
 
@@ -40,8 +48,8 @@ public class DetailActivity extends ActionBarActivity implements CompoundButton.
         TextView text_teacher = (TextView) findViewById(R.id.text_teacher);
         TextView text_room = (TextView) findViewById(R.id.text_room);
 
-        TableHelper helper = new TableHelper(this);
-        ClassTable classTable = helper.getClassTableById(class_id);
+        helper = new TableHelper(this);
+        classTable = helper.getClassTableById(class_id);
         String[] detail = { classTable.getDay(), classTable.getTime(), classTable.getName()
                 , classTable.getTeacher(), classTable.getRoom() };
         TextView[] textViews = { text_day, text_time, text_name, text_teacher, text_room };
@@ -50,6 +58,15 @@ public class DetailActivity extends ActionBarActivity implements CompoundButton.
         }
 
         Switch alarm_switch = (Switch) findViewById(R.id.switch_alarm);
+        alarm_switch.setChecked(classTable.hasAlarm());
+        alertTextView = (TextView) findViewById(R.id.text_alarm);
+        // classTableがAlarmを持つなら、TextViewでセット時間表示
+        if (alarm_switch.isChecked()) {
+            alertTextView.setText(classTable.getAlarmHour() + "時"
+                    + classTable.getAlarmMinute() + "分にアラームをセットしています");
+        } else {
+            alertTextView.setText("アラームは設定されていません");
+        }
         alarm_switch.setOnCheckedChangeListener(this);
     }
 
@@ -77,15 +94,41 @@ public class DetailActivity extends ActionBarActivity implements CompoundButton.
 
     @Override
     public void onCheckedChanged(CompoundButton compoundButton, boolean isChecked) {
-        FragmentTransaction transaction = manager.beginTransaction();
-        if (isChecked == true) {
-            transaction.add(R.id.viewContainer, SetAlarmFragment.newInstance(class_id)
-                            , SET_ALARM_FRAGMENT_TAG).commit();
+        classTable = helper.getClassTableById(class_id);
+        if (isChecked) {
+            // アラームセット用のダイアログ表示
+            TimePickerDialog timePickerDialog = new TimePickerDialog(this, new TimePickerDialog.OnTimeSetListener() {
+                @Override
+                public void onTimeSet(TimePicker timePicker, int hour, int minute) {
+
+                    // classTable更新
+                    classTable.setHasAlarm(true);
+                    classTable.setAlarmHour(hour);
+                    classTable.setAlarmMinute(minute);
+                    helper.updateClassTable(classTable);
+
+                    // alertTextView UI更新
+                    alertTextView.refreshDrawableState();
+                    alertTextView.setText(classTable.getDay() + "日の"
+                            + Integer.toString(hour) + "時"
+                            + Integer.toString(minute) + "分にアラームをセットしています");
+
+                    Toast.makeText(DetailActivity.this, classTable.getDay() + "日の"
+                            + Integer.toString(hour) + "時"
+                            + Integer.toString(minute) + "分にアラームをセットされました！", Toast.LENGTH_SHORT).show();
+                }
+            }, DEFAULT_TIME[0], DEFAULT_TIME[1], true);
+            timePickerDialog.show();
         } else {
-            Fragment alarmFragment = manager.findFragmentByTag(SET_ALARM_FRAGMENT_TAG);
-            if (alarmFragment != null) {
-                transaction.remove(alarmFragment).commit();
-            }
+            // classTable更新
+            classTable.setHasAlarm(false);
+            classTable.setAlarmHour(0);
+            classTable.setAlarmMinute(0);
+            helper.updateClassTable(classTable);
+
+            // alertTextView UI更新
+            alertTextView.refreshDrawableState();
+            alertTextView.setText("アラームはセットされていません");
         }
     }
 }

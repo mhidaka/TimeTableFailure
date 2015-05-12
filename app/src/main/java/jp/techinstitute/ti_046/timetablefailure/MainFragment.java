@@ -125,7 +125,7 @@ public class MainFragment extends android.support.v4.app.Fragment {
         }
 
         @Override
-        public boolean onItemLongClick(AdapterView<?> adapterView, final View view, final int position, long id) {
+        public boolean onItemLongClick(final AdapterView<?> adapterView, final View view, final int position, long id) {
             final TableHelper helper = new TableHelper(getContext());
             String[] menu = new String[] { "追加", "削除" };
             final AlertDialog.Builder builder = new AlertDialog.Builder(getContext());
@@ -145,6 +145,9 @@ public class MainFragment extends android.support.v4.app.Fragment {
                                 public void onClick(DialogInterface dialogInterface, int i) {
                                     int classId = position + 1;
                                     helper.deleteClassTable(classId);
+
+                                    // TODO: ArrayAdapter.notifyDataSetChanged()調べる。他のデータベース処理にも適用
+                                    adapter.notifyDataSetChanged();
                                 }
                             });
                             deleteBuilder.setNegativeButton("キャンセル", new DialogInterface.OnClickListener() {
