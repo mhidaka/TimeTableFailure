@@ -1,11 +1,13 @@
 package jp.techinstitute.ti_046.timetablefailure;
 
 public class ClassTable {
+    private int id;
     private String day;
     private String time;
     private String name;
     private String room;
     private String teacher;
+
     private boolean hasAlarm;
     private int alarm_hour;
     private int alarm_minute;
@@ -41,6 +43,15 @@ public class ClassTable {
         this.hasAlarm = false;
         this.alarm_hour = 0;
         this.alarm_minute = 0;
+    }
+
+
+    public int getId() {
+        return id;
+    }
+
+    public void setId(int id) {
+        this.id = id;
     }
 
     public String getName() {

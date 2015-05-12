@@ -112,6 +112,7 @@ public class TableHelper extends SQLiteOpenHelper{
         } else {
 
             // index取得
+            int idIndex = cursor.getColumnIndex(KEY_ID);
             int dayIndex = cursor.getColumnIndex(KEY_DAY);
             int timeIndex = cursor.getColumnIndex(KEY_TIME);
             int nameIndex = cursor.getColumnIndex(KEY_NAME);
@@ -122,6 +123,7 @@ public class TableHelper extends SQLiteOpenHelper{
             int alarmMinuteIndex = cursor.getColumnIndex(KEY_ALARM_MINUTE);
 
             // 取得したindexを元にclassTableにデータをセット
+            classTable.setId(cursor.getInt(idIndex));
             classTable.setDay(cursor.getString(dayIndex));
             classTable.setTime(cursor.getString(timeIndex));
             classTable.setName(cursor.getString(nameIndex));

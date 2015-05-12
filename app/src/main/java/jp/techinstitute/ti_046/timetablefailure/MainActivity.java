@@ -3,6 +3,7 @@ package jp.techinstitute.ti_046.timetablefailure;
 import android.app.AlertDialog;
 import android.content.Context;
 import android.content.DialogInterface;
+import android.content.Intent;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentManager;
 import android.support.v4.app.FragmentTransaction;
@@ -82,9 +83,16 @@ public class MainActivity extends ActionBarActivity {
                         classTable.setName(getStringOfEditText(editName));
                         classTable.setTeacher(getStringOfEditText(editTeacher));
                         helper.updateClassTable(classTable);
-                        // TODO: もし追加した授業がその日の最初の授業なら、アラームセットするかダイアログ
+                        classTable = helper.getClassTable(classTable.getDay(), classTable.getTime());
+                        int class_id = classTable.getId();
 
                         Log.d("createClassTable:", classTable.getDay() + classTable.getTime() + classTable.getName());
+
+                        // TODO: もし追加した授業がその日の最初の授業なら、アラームセットするかダイアログ
+
+                        Intent intent = new Intent(MainActivity.this, DetailActivity.class);
+                        intent.putExtra("class_id", class_id);
+                        startActivity(intent);
                     }
                 });
                 addDialogBuilder.setNegativeButton("キャンセル", new DialogInterface.OnClickListener() {

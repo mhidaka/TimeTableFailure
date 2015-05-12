@@ -111,17 +111,6 @@ public class MainFragment extends android.support.v4.app.Fragment {
             Intent intent = new Intent(getActivity(), DetailActivity.class);
             intent.putExtra("class_id", class_id);
             startActivity(intent);
-
-//            DetailFragment detailFragment = DetailFragment.newInstance(class_id);
-//            // Fragment入れ替え
-//            FragmentManager manager = getFragmentManager();
-//            FragmentTransaction transaction = manager.beginTransaction();
-//            transaction.replace(R.id.container, detailFragment);
-//            // 戻るボタンで戻り可能にする
-//            transaction.addToBackStack(null);
-//            transaction.commit();
-//            // TODO テスト用のToastでid表示を消す
-//            Toast.makeText(getActivity(), class_id + " was touched", Toast.LENGTH_SHORT).show();
         }
 
         @Override
