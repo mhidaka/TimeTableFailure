@@ -4,6 +4,7 @@ import android.app.Activity;
 import android.app.AlertDialog;
 import android.content.Context;
 import android.content.DialogInterface;
+import android.content.Intent;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
 import android.support.v4.app.FragmentManager;
@@ -57,7 +58,7 @@ public class MainFragment extends android.support.v4.app.Fragment {
         ArrayList<ClassTable> list = new ArrayList<>();
         for (String time : TableHelper.TIMES) {
             for (String day: TableHelper.DAYS) {
-                ClassTable classTable = new ClassTable(day, time, day + time, "", "", false, 0);
+                ClassTable classTable = new ClassTable(day, time, day + time, "", "", false, 0, 0);
                 helper.createClassTable(classTable, helper.getWritableDatabase());
 
                 list.add(classTable);
@@ -83,6 +84,8 @@ public class MainFragment extends android.support.v4.app.Fragment {
             super(context, resource, list);
         }
 
+
+
         @Override
         public View getView(int position, View convertView, ViewGroup parent) {
             ClassTable classTable = helper.getClassTableById(position + 1);
@@ -90,7 +93,8 @@ public class MainFragment extends android.support.v4.app.Fragment {
 
             // textViewの高さを、”親Viewの高さ/時限数”にセットして、背景にborder_grid指定
             int parentHeight = parent.getHeight();
-            textView.setHeight(parentHeight / TableHelper.TIMES.length);
+            final int HEIGHT = parentHeight / TableHelper.TIMES.length;
+            textView.setHeight(HEIGHT);
             textView.setBackgroundResource(R.drawable.border_grid);
 
             textView.setText(classTable.getName());
@@ -98,20 +102,26 @@ public class MainFragment extends android.support.v4.app.Fragment {
             return textView;
         }
 
+
         @Override
         public void onItemClick(AdapterView<?> adapterView, View view, int position, long id) {
-            // class_idにクリックされた授業のidをセットし、Fragmentに渡す
+            // class_idにクリックされた授業のidをセット
             int class_id = position + 1;
-            DetailFragment detailFragment = DetailFragment.newInstance(class_id);
-            // Fragment入れ替え
-            FragmentManager manager = getFragmentManager();
-            FragmentTransaction transaction = manager.beginTransaction();
-            transaction.replace(R.id.container, detailFragment);
-            // 戻るボタンで戻り可能にする
-            transaction.addToBackStack(null);
-            transaction.commit();
-            // TODO テスト用のToastでid表示を消す
-            Toast.makeText(getActivity(), class_id + " was touched", Toast.LENGTH_SHORT).show();
+
+            Intent intent = new Intent(getActivity(), DetailActivity.class);
+            intent.putExtra("class_id", class_id);
+            startActivity(intent);
+
+//            DetailFragment detailFragment = DetailFragment.newInstance(class_id);
+//            // Fragment入れ替え
+//            FragmentManager manager = getFragmentManager();
+//            FragmentTransaction transaction = manager.beginTransaction();
+//            transaction.replace(R.id.container, detailFragment);
+//            // 戻るボタンで戻り可能にする
+//            transaction.addToBackStack(null);
+//            transaction.commit();
+//            // TODO テスト用のToastでid表示を消す
+//            Toast.makeText(getActivity(), class_id + " was touched", Toast.LENGTH_SHORT).show();
         }
 
         @Override
@@ -150,6 +160,11 @@ public class MainFragment extends android.support.v4.app.Fragment {
             builder.show();
             return true;
         }
+    }
+
+    private static class ViewHolder {
+        TextView textView;
+        int height;
     }
 }
 

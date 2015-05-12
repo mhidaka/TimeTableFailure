@@ -5,9 +5,10 @@
     <string name="hello_world">Hello world!</string>
     <string name="action_settings">Settings</string>
     <string name="hello_blank_fragment">Hello blank fragment</string>
-
     <string name="spinner_day">曜日を選択</string>
     <string name="spinner_time">時間を選択</string>
     <string name="title_activity_alarm">AlarmActivity</string>
     <string name="alarm_prompt">何分前にアラームセット？</string>
+    <string name="title_activity_detail">DetailActivity</string>
+
 </resources>

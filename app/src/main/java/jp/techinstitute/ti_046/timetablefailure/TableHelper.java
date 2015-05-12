@@ -2,7 +2,6 @@ package jp.techinstitute.ti_046.timetablefailure;
 
 import android.content.ContentValues;
 import android.content.Context;
-import android.content.Intent;
 import android.database.Cursor;
 import android.database.SQLException;
 import android.database.sqlite.SQLiteDatabase;
@@ -25,11 +24,12 @@ public class TableHelper extends SQLiteOpenHelper{
             KEY_TEACHER = "teacher",
             KEY_ROOM = "room",
             KEY_HAS_ALARM = "hasAlarm", // 0 = false, 1 = true
-            KEY_ALARM = "alarm";
+            KEY_ALARM_HOUR = "alarmHour",
+            KEY_ALARM_MINUTE = "alarmMinute";
 
     private static final String[] COLUMNS = {
             KEY_ID, KEY_DAY, KEY_TIME, KEY_NAME
-            , KEY_TEACHER, KEY_ROOM, KEY_HAS_ALARM, KEY_ALARM };
+            , KEY_TEACHER, KEY_ROOM, KEY_HAS_ALARM, KEY_ALARM_HOUR, KEY_ALARM_MINUTE };
 
     private static int DB_VERSION = 1;
 
@@ -42,7 +42,8 @@ public class TableHelper extends SQLiteOpenHelper{
                     KEY_TEACHER + " TEXT," +
                     KEY_ROOM + " TEXT, " +
                     KEY_HAS_ALARM + " INTEGER, " +
-                    KEY_ALARM + " INTEGER)";
+                    KEY_ALARM_HOUR + " INTEGER, " +
+                    KEY_ALARM_MINUTE + " INTEGER)";
 
 
     public TableHelper(Context context) {
@@ -62,7 +63,7 @@ public class TableHelper extends SQLiteOpenHelper{
             for (String day: DAYS) {
                 // 各行に曜日と時間をセットして、かつ授業名にテストとしてday + timeをセット
                 // TODO 授業名を空に！
-                ClassTable classTable = new ClassTable(day, time, day + time, " ", " ", false, 0);
+                ClassTable classTable = new ClassTable(day, time, day + time, " ", " ", false, 0, 0);
                 createClassTable(classTable, db);
                 list.add(classTable);
                 Log.d("DEFAULT SET", "DONE" + classTable.getName());
@@ -79,7 +80,8 @@ public class TableHelper extends SQLiteOpenHelper{
         values.put(KEY_TEACHER, classTable.getTeacher());
         values.put(KEY_ROOM, classTable.getRoom());
         values.put(KEY_HAS_ALARM, classTable.hasAlarm());
-        values.put(KEY_ALARM, classTable.getAlarm());
+        values.put(KEY_ALARM_HOUR, classTable.getAlarmHour());
+        values.put(KEY_ALARM_MINUTE, classTable.getAlarmMinute());
         long id = db.insert(TABLE_NAME, null, values);
         if (id == -1) {
             Log.v("Database", "Failed to insert classTable");
@@ -109,7 +111,8 @@ public class TableHelper extends SQLiteOpenHelper{
             int teacherIndex = cursor.getColumnIndex(KEY_TEACHER);
             int roomIndex = cursor.getColumnIndex(KEY_ROOM);
             int hasAlarmIndex = cursor.getColumnIndex(KEY_HAS_ALARM);
-            int alarmIndex = cursor.getColumnIndex(KEY_ALARM);
+            int alarmHourIndex = cursor.getColumnIndex(KEY_ALARM_HOUR);
+            int alarmMinuteIndex = cursor.getColumnIndex(KEY_ALARM_MINUTE);
 
             // 取得したindexを元にclassTableにデータをセット
             classTable.setDay(cursor.getString(dayIndex));
@@ -117,7 +120,8 @@ public class TableHelper extends SQLiteOpenHelper{
             classTable.setName(cursor.getString(nameIndex));
             classTable.setTeacher(cursor.getString(teacherIndex));
             classTable.setRoom(cursor.getString(roomIndex));
-            classTable.setAlarm(cursor.getInt(alarmIndex));
+            classTable.setAlarmHour(cursor.getInt(alarmHourIndex));
+            classTable.setAlarmMinute(cursor.getInt(alarmMinuteIndex));
 
             // hasAlarmだけはbooleanなので別処理
             switch (cursor.getInt(hasAlarmIndex)) {
@@ -180,8 +184,8 @@ public class TableHelper extends SQLiteOpenHelper{
         values.put(KEY_NAME, classTable.getName());
         values.put(KEY_TEACHER, classTable.getTeacher());
         values.put(KEY_ROOM, classTable.getRoom());
-        values.put(KEY_HAS_ALARM, classTable.hasAlarm());
-        values.put(KEY_ALARM, classTable.getAlarm());
+        values.put(KEY_ALARM_HOUR, classTable.getAlarmHour());
+        values.put(KEY_ALARM_MINUTE, classTable.getAlarmMinute());
 
         String where = KEY_ID + "=?";
         int id = getId(classTable.getDay(), classTable.getTime());

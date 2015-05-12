@@ -1,6 +1,7 @@
 package jp.techinstitute.ti_046.timetablefailure;
 
 import android.app.AlertDialog;
+import android.content.Context;
 import android.content.DialogInterface;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentManager;
@@ -12,6 +13,7 @@ import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
+import android.view.inputmethod.InputMethodManager;
 import android.widget.EditText;
 import android.widget.Spinner;
 import android.widget.Toast;
@@ -53,9 +55,9 @@ public class MainActivity extends ActionBarActivity {
         switch (id) {
             case R.id.action_add_class_table:
                 // AlertDialog to create new ClassTable
-                AlertDialog.Builder addDialogBuilder = new AlertDialog.Builder(this);
+                final AlertDialog.Builder addDialogBuilder = new AlertDialog.Builder(this);
                 // set dialog layout of add_fragment_dialog
-                View rootView = getLayoutInflater().inflate(R.layout.fragment_add_dialog, null);
+                final View rootView = getLayoutInflater().inflate(R.layout.fragment_add_dialog, null);
                 // get views in rootView
                 // findViewByIdはBuilder.setView後は使えないので要注意
                 final Spinner spinnerDay = (Spinner) rootView.findViewById(R.id.spinner_day);
@@ -63,11 +65,17 @@ public class MainActivity extends ActionBarActivity {
                 final EditText editName = (EditText) rootView.findViewById(R.id.edit_name);
                 final EditText editTeacher = (EditText) rootView.findViewById(R.id.edit_teacher);
 
+                // Software Keyboardを、それ以外の部分をクリックで隠す
+                InputMethodManager inputMethodManager =
+                        (InputMethodManager) MainActivity.this.getSystemService(Context.INPUT_METHOD_SERVICE);
+                inputMethodManager.hideSoftInputFromWindow(rootView.getWindowToken(), 0);
+
                 addDialogBuilder.setView(rootView);
                 addDialogBuilder.setTitle("新規授業登録");
                 addDialogBuilder.setPositiveButton("追加", new DialogInterface.OnClickListener() {
                     @Override
                     public void onClick(DialogInterface dialogInterface, int i) {
+
                         ClassTable classTable = new ClassTable();
                         classTable.setDay(getSpinnerItemSelected(spinnerDay));
                         classTable.setTime(getSpinnerItemSelected(spinnerTime));
@@ -77,6 +85,11 @@ public class MainActivity extends ActionBarActivity {
                         // TODO: もし追加した授業がその日の最初の授業なら、アラームセットするかダイアログ
 
                         Log.d("createClassTable:", classTable.getDay() + classTable.getTime() + classTable.getName());
+                    }
+                });
+                addDialogBuilder.setNegativeButton("キャンセル", new DialogInterface.OnClickListener() {
+                    @Override
+                    public void onClick(DialogInterface dialogInterface, int i) {
                     }
                 });
                 addDialogBuilder.show();

@@ -7,16 +7,18 @@ public class ClassTable {
     private String room;
     private String teacher;
     private boolean hasAlarm;
-    private int alarm;
+    private int alarm_hour;
+    private int alarm_minute;
 
-    public ClassTable(String day, String time, String name, String room, String teacher, boolean hasAlarm, int alarm) {
+    public ClassTable(String day, String time, String name, String room, String teacher, boolean hasAlarm, int alarm_hour, int alarm_minute) {
         this.day = day;
         this.time = time;
         this.name = name;
         this.room = room;
         this.teacher = teacher;
         this.hasAlarm = hasAlarm;
-        this.alarm = alarm;
+        this.alarm_hour = alarm_hour;
+        this.alarm_minute = alarm_minute;
     }
 
     public ClassTable(String day, String time) {
@@ -26,7 +28,8 @@ public class ClassTable {
         this.room = "test_room";
         this.teacher = "test_teacher";
         this.hasAlarm = false;
-        this.alarm = 0;
+        this.alarm_hour = 0;
+        this.alarm_minute = 0;
     }
 
     public ClassTable() {
@@ -36,7 +39,8 @@ public class ClassTable {
         this.room = "test_room";
         this.teacher = "test_teacher";
         this.hasAlarm = false;
-        this.alarm = 0;
+        this.alarm_hour = 0;
+        this.alarm_minute = 0;
     }
 
     public String getName() {
@@ -87,11 +91,19 @@ public class ClassTable {
         this.hasAlarm = hasAlarm;
     }
 
-    public int getAlarm() {
-        return alarm;
+    public int getAlarmHour() {
+        return alarm_hour;
     }
 
-    public void setAlarm(int alarm) {
-        this.alarm = alarm;
+    public void setAlarmHour(int alarm_hour) {
+        this.alarm_hour = alarm_hour;
+    }
+
+    public int getAlarmMinute() {
+        return alarm_minute;
+    }
+
+    public void setAlarmMinute(int alarm_minute) {
+        this.alarm_minute = alarm_minute;
     }
 }
