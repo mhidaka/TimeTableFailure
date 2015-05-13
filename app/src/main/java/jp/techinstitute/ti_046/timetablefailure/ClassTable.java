@@ -12,7 +12,7 @@ public class ClassTable {
     private int alarm_hour;
     private int alarm_minute;
 
-    public ClassTable(String day, String time, String name, String room, String teacher, boolean hasAlarm, int alarm_hour, int alarm_minute) {
+    public ClassTable(String day, String time, String name, String teacher, String room, boolean hasAlarm, int alarm_hour, int alarm_minute) {
         this.day = day;
         this.time = time;
         this.name = name;
@@ -32,6 +32,9 @@ public class ClassTable {
         this.hasAlarm = false;
         this.alarm_hour = 0;
         this.alarm_minute = 0;
+    }
+    public ClassTable(int id) {
+        this.id = id;
     }
 
     public ClassTable() {

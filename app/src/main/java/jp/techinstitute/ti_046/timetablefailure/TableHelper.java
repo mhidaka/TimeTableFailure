@@ -186,25 +186,26 @@ public class TableHelper extends SQLiteOpenHelper{
         return dayAndTime;
     }
 
-    public void updateClassTable(ClassTable classTable) {
+    public ClassTable updateClassTable(ClassTable oldClassTable) {
         SQLiteDatabase db = getWritableDatabase();
 
         ContentValues values = new ContentValues();
-        values.put(KEY_NAME, classTable.getName());
-        values.put(KEY_TEACHER, classTable.getTeacher());
-        values.put(KEY_ROOM, classTable.getRoom());
-        values.put(KEY_ALARM_HOUR, classTable.getAlarmHour());
-        values.put(KEY_ALARM_MINUTE, classTable.getAlarmMinute());
+        values.put(KEY_NAME, oldClassTable.getName());
+        values.put(KEY_TEACHER, oldClassTable.getTeacher());
+        values.put(KEY_ROOM, oldClassTable.getRoom());
+        values.put(KEY_ALARM_HOUR, oldClassTable.getAlarmHour());
+        values.put(KEY_ALARM_MINUTE, oldClassTable.getAlarmMinute());
 
         // hasAlarmだけbooleanなので別処理
-        if (classTable.hasAlarm()) {
+        if (oldClassTable.hasAlarm()) {
             values.put(KEY_HAS_ALARM, 1);
-        } else if (!classTable.hasAlarm()) {
+        } else if (!oldClassTable.hasAlarm()) {
             values.put(KEY_HAS_ALARM, 0);
         }
 
+        // idから検索してupdate
         String where = KEY_ID + "=?";
-        int id = getId(classTable.getDay(), classTable.getTime());
+        int id = getId(oldClassTable.getDay(), oldClassTable.getTime());
         String[] args = { String.valueOf(id) };
 
         int count = db.update(TABLE_NAME, values, where, args);
@@ -212,6 +213,8 @@ public class TableHelper extends SQLiteOpenHelper{
             Log.v("Edit", "Failed to update");
         }
         db.close();
+
+        return getClassTableById(id);
     }
 
     public void deleteClassTable(int id) {

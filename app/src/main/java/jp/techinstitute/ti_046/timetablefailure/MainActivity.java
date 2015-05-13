@@ -4,12 +4,10 @@ import android.app.AlertDialog;
 import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
-import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentManager;
 import android.support.v4.app.FragmentTransaction;
 import android.support.v7.app.ActionBarActivity;
 import android.os.Bundle;
-import android.text.SpannableStringBuilder;
 import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
@@ -19,13 +17,23 @@ import android.widget.EditText;
 import android.widget.Spinner;
 import android.widget.Toast;
 
-public class MainActivity extends ActionBarActivity {
+public class MainActivity extends ActionBarActivity implements InputTextListener {
 
     private final String MAIN_FRAGMENT_TAG = MainFragment.class.getName();
+    private BlankTextNotify notify = null;
     private FragmentManager manager;
     private FragmentTransaction transaction;
     private MainFragment mainFragment;
     private TableHelper helper;
+    private boolean hasAlarm;
+    private ClassTable classTable;
+    private int class_id;
+    private View rootView;
+    private Intent intent;
+
+    private Spinner spinnerDay, spinnerTime;
+    private EditText editName, editTeacher;
+
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -55,52 +63,72 @@ public class MainActivity extends ActionBarActivity {
 
         switch (id) {
             case R.id.action_add_class_table:
-                // AlertDialog to create new ClassTable
-                final AlertDialog.Builder addDialogBuilder = new AlertDialog.Builder(this);
-                // set dialog layout of add_fragment_dialog
-                final View rootView = getLayoutInflater().inflate(R.layout.fragment_add_dialog, null);
-                // get views in rootView
-                // findViewByIdはBuilder.setView後は使えないので要注意
-                final Spinner spinnerDay = (Spinner) rootView.findViewById(R.id.spinner_day);
-                final Spinner spinnerTime = (Spinner) rootView.findViewById(R.id.spinner_time);
-                final EditText editName = (EditText) rootView.findViewById(R.id.edit_name);
-                final EditText editTeacher = (EditText) rootView.findViewById(R.id.edit_teacher);
+                AlertDialog.Builder addTableBuilder = new AlertDialog.Builder(this);
+                // Layout及びView取得、Dialogにセット
+                // TODO: もっとすっきり取得したい
+                rootView = getLayoutInflater().inflate(R.layout.fragment_add_dialog, null);
+                spinnerDay = (Spinner) rootView.findViewById(R.id.spinner_day);
+                spinnerTime = (Spinner) rootView.findViewById(R.id.spinner_time);
+                editName = (EditText) rootView.findViewById(R.id.edit_name);
+                editTeacher = (EditText) rootView.findViewById(R.id.edit_teacher);
+                addTableBuilder.setView(rootView);
+
+                notify = new BlankTextNotify(editName);
+                notify.setListener(MainActivity.this);
 
                 // Software Keyboardを、それ以外の部分をクリックで隠す
                 InputMethodManager inputMethodManager =
-                        (InputMethodManager) MainActivity.this.getSystemService(Context.INPUT_METHOD_SERVICE);
+                        (InputMethodManager) getSystemService(Context.INPUT_METHOD_SERVICE);
                 inputMethodManager.hideSoftInputFromWindow(rootView.getWindowToken(), 0);
 
-                addDialogBuilder.setView(rootView);
-                addDialogBuilder.setTitle("新規授業登録");
-                addDialogBuilder.setPositiveButton("追加", new DialogInterface.OnClickListener() {
+                addTableBuilder.setTitle("新規授業登録");
+                addTableBuilder.setPositiveButton("追加", new DialogInterface.OnClickListener() {
                     @Override
                     public void onClick(DialogInterface dialogInterface, int i) {
+                        // editName空だとダメ！
+                        boolean hasText = notify.containsText();
 
-                        ClassTable classTable = new ClassTable();
-                        classTable.setDay(getSpinnerItemSelected(spinnerDay));
-                        classTable.setTime(getSpinnerItemSelected(spinnerTime));
-                        classTable.setName(getStringOfEditText(editName));
-                        classTable.setTeacher(getStringOfEditText(editTeacher));
-                        helper.updateClassTable(classTable);
-                        classTable = helper.getClassTable(classTable.getDay(), classTable.getTime());
-                        int class_id = classTable.getId();
+                        if (hasText) {
+                            // TODO: もっとすっきり書きたい
+                            String day = spinnerDay.getSelectedItem().toString();
+                            String time = spinnerTime.getSelectedItem().toString();
+                            String name = editName.getText().toString();
+                            String teacher = editTeacher.getText().toString();
+                            class_id = helper.getId(day, time);
+                            classTable = new ClassTable(day, time, name, teacher, "room", false, 0, 0);
+                            // Databaseを更新
+                            helper.updateClassTable(classTable);
+                            Log.d("createClassTable:", classTable.getDay()
+                                    + classTable.getTime() + classTable.getName());
 
-                        Log.d("createClassTable:", classTable.getDay() + classTable.getTime() + classTable.getName());
+                            AlertDialog.Builder askDialogBuilder = new AlertDialog.Builder(MainActivity.this);
+                            askDialogBuilder.setMessage("この授業にアラームをセットしますか？");
+                            askDialogBuilder.setPositiveButton("はい", new DialogInterface.OnClickListener() {
+                                @Override
+                                public void onClick(DialogInterface dialogInterface, int i) {
+                                    hasAlarm = true;
+                                    intent = new Intent(MainActivity.this, DetailActivity.class);
+                                    intent.putExtra(DetailActivity.TAG_CLASS_ID, class_id);
+                                    intent.putExtra(DetailActivity.TAG_WANTS_ALARM, hasAlarm);
+                                    startActivity(intent);
+                                }
+                            });
+                            askDialogBuilder.setNegativeButton("いいえ", new DialogInterface.OnClickListener() {
+                                @Override
+                                public void onClick(DialogInterface dialogInterface, int i) {
+                                    hasAlarm = false;
+                                    intent = new Intent(MainActivity.this, DetailActivity.class);
+                                    intent.putExtra(DetailActivity.TAG_CLASS_ID, class_id);
+                                    intent.putExtra(DetailActivity.TAG_WANTS_ALARM, hasAlarm);
+                                    startActivity(intent);
+                                }
+                            });
 
-                        // TODO: もし追加した授業がその日の最初の授業なら、アラームセットするかダイアログ
-
-                        Intent intent = new Intent(MainActivity.this, DetailActivity.class);
-                        intent.putExtra("class_id", class_id);
-                        startActivity(intent);
+                            askDialogBuilder.show();
+                        }
                     }
                 });
-                addDialogBuilder.setNegativeButton("キャンセル", new DialogInterface.OnClickListener() {
-                    @Override
-                    public void onClick(DialogInterface dialogInterface, int i) {
-                    }
-                });
-                addDialogBuilder.show();
+                addTableBuilder.show();
                 break;
             case R.id.action_drop_class_table:
                 AlertDialog.Builder deleteDialogBuilder = new AlertDialog.Builder(this);
@@ -122,12 +150,18 @@ public class MainActivity extends ActionBarActivity {
         return super.onOptionsItemSelected(item);
     }
 
-    private String getSpinnerItemSelected(Spinner spinner) {
-        return spinner.getSelectedItem().toString();
+
+
+    @Override
+    public void noInputText() {
+        AlertDialog.Builder builder = new AlertDialog.Builder(this);
+        builder.setTitle("授業が登録できません！");
+        builder.setMessage("授業名が空欄です");
+        builder.create().show();
     }
 
-    private String getStringOfEditText(EditText editText) {
-        SpannableStringBuilder spannableStringBuilder = (SpannableStringBuilder) editText.getText();
-        return spannableStringBuilder.toString();
+    @Override
+    public void inputText() {
+        // 何もしない
     }
 }
