@@ -6,15 +6,13 @@ import android.content.Intent;
 import android.util.Log;
 
 public class AlarmReceiver extends BroadcastReceiver {
-    public AlarmReceiver() {
-    }
 
     @Override
     public void onReceive(Context context, Intent intent) {
         Log.v("レシーバログ", "action: " + intent.getAction());
-        Intent notification = new Intent(context,
-                AlarmNotificationActivity.class);
-        //ここがないと画面を起動できません
+        // 起動するActivity指定
+        Intent notification = new Intent(context, AlarmActivity.class);
+        // 画面起動用
         notification.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
         context.startActivity(notification);
     }

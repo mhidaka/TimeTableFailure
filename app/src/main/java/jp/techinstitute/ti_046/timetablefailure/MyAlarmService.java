@@ -6,6 +6,9 @@ import android.os.IBinder;
 import android.util.Log;
 
 public class MyAlarmService extends Service {
+
+    AlarmReceiver receiver;
+
     @Override
     public IBinder onBind(Intent intent) {
         return null;
@@ -24,8 +27,8 @@ public class MyAlarmService extends Service {
             Intent alarmBroadcast = new Intent(); // ここでアラーム受け取るActivity指定
             alarmBroadcast.setAction("MyAlarmAction"); // sendMyMessage
             sendBroadcast(alarmBroadcast);
-            Log.v("MyAlarmServiceログ", "通知画面起動メッセージを送った");
-
+            MyAlarmService.this.stopSelf();
+            Log.v(MyAlarmService.class.getSimpleName(), "SERVICE STOPPED");
         }
     };
 }

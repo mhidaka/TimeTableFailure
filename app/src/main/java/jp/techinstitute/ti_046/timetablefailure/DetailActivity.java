@@ -107,7 +107,8 @@ public class DetailActivity extends ActionBarActivity
         classTable = newClassTable;
 
         // アラームを実際にセット
-        MyAlarmManager alarmManager = new MyAlarmManager(this);
+        MyAlarmManager alarmManager = new MyAlarmManager(this, class_id);
+        alarmManager.addAlarm(hour, minute);
 
         // alarmに関するUI更新
         alarmSwitch.setChecked(classTable.hasAlarm());

@@ -28,7 +28,7 @@
                 android:value="jp.techinstitute.ti_046.timetablefailure.MainActivity" />
         </activity>
 
-        <receiver android:name="AlarmReceiver" >
+        <receiver android:name=".AlarmReceiver" >
             <intent-filter>
                 <action android:name="MyAlarmAction"/>
             </intent-filter>
@@ -37,8 +37,8 @@
         <service android:name=".MyAlarmService"/>
 
         <activity
-            android:name=".AlarmNotificationActivity"
-            android:label="@string/title_activity_alarm_notification"
+            android:name=".AlarmActivity"
+            android:label="@string/title_activity_alarm"
             android:parentActivityName=".MainActivity" >
             <meta-data
                 android:name="android.support.PARENT_ACTIVITY"
