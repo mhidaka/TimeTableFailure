@@ -10,5 +10,6 @@
     <string name="title_activity_alarm">AlarmActivity</string>
     <string name="alarm_prompt">何分前にアラームセット？</string>
     <string name="title_activity_detail">DetailActivity</string>
+    <string name="title_activity_alarm_notification">AlarmNotificationActivity</string>
 
 </resources>

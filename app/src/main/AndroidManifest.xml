@@ -2,6 +2,9 @@
 <manifest xmlns:android="http://schemas.android.com/apk/res/android"
     package="jp.techinstitute.ti_046.timetablefailure" >
 
+    <uses-permission android:name="android.permission.WAKE_LOCK" />
+    <uses-permission android:name="android.permission.DISABLE_KEYGUARD" />
+
     <application
         android:allowBackup="true"
         android:icon="@drawable/ic_launcher"
@@ -19,6 +22,23 @@
         <activity
             android:name=".DetailActivity"
             android:label="@string/title_activity_detail"
+            android:parentActivityName=".MainActivity" >
+            <meta-data
+                android:name="android.support.PARENT_ACTIVITY"
+                android:value="jp.techinstitute.ti_046.timetablefailure.MainActivity" />
+        </activity>
+
+        <receiver android:name="AlarmReceiver" >
+            <intent-filter>
+                <action android:name="MyAlarmAction"/>
+            </intent-filter>
+        </receiver>
+
+        <service android:name=".MyAlarmService"/>
+
+        <activity
+            android:name=".AlarmNotificationActivity"
+            android:label="@string/title_activity_alarm_notification"
             android:parentActivityName=".MainActivity" >
             <meta-data
                 android:name="android.support.PARENT_ACTIVITY"

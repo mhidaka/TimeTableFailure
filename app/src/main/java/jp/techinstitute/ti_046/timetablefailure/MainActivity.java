@@ -15,7 +15,6 @@ import android.view.View;
 import android.view.inputmethod.InputMethodManager;
 import android.widget.EditText;
 import android.widget.Spinner;
-import android.widget.Toast;
 
 public class MainActivity extends ActionBarActivity implements InputTextListener {
 
@@ -66,7 +65,7 @@ public class MainActivity extends ActionBarActivity implements InputTextListener
                 AlertDialog.Builder addTableBuilder = new AlertDialog.Builder(this);
                 // Layout及びView取得、Dialogにセット
                 // TODO: もっとすっきり取得したい
-                rootView = getLayoutInflater().inflate(R.layout.fragment_add_dialog, null);
+                rootView = getLayoutInflater().inflate(R.layout.layout_add_dialog, null);
                 spinnerDay = (Spinner) rootView.findViewById(R.id.spinner_day);
                 spinnerTime = (Spinner) rootView.findViewById(R.id.spinner_time);
                 editName = (EditText) rootView.findViewById(R.id.edit_name);

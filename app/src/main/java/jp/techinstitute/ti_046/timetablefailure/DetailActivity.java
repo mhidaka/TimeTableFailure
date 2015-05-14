@@ -1,10 +1,10 @@
 package jp.techinstitute.ti_046.timetablefailure;
 
+import android.app.AlarmManager;
 import android.app.TimePickerDialog;
 import android.content.Intent;
 import android.support.v7.app.ActionBarActivity;
 import android.os.Bundle;
-import android.view.View;
 import android.widget.CompoundButton;
 import android.widget.Switch;
 import android.widget.TextView;
@@ -20,12 +20,9 @@ public class DetailActivity extends ActionBarActivity
     private final int[] DEFAULT_TIME = {0, 0};
     private int class_id;
     private boolean wantsAlarm;
-    private View rootView;
 
     private TimePickerDialog timePickerDialog;
-
     private TableHelper helper;
-
     private ClassTable classTable;
     private TextView alarmTextView;
     private Switch alarmSwitch;
@@ -90,9 +87,13 @@ public class DetailActivity extends ActionBarActivity
                     , DEFAULT_TIME[0], DEFAULT_TIME[1], true);
             timePickerDialog.show();
         } else {
+            classTable.setHasAlarm(false);
+            helper.updateClassTable(classTable);
+
             alarmTextView = (TextView) findViewById(R.id.text_alarm);
             alarmTextView.setText("アラームは設定されていません");
         }
+        timePickerDialog = null;
     }
 
     @Override
@@ -104,6 +105,9 @@ public class DetailActivity extends ActionBarActivity
         ClassTable newClassTable = helper.updateClassTable(classTable);
         // 更新したnewClassTableをthis.classTaleにセット
         classTable = newClassTable;
+
+        // アラームを実際にセット
+        MyAlarmManager alarmManager = new MyAlarmManager(this);
 
         // alarmに関するUI更新
         alarmSwitch.setChecked(classTable.hasAlarm());
