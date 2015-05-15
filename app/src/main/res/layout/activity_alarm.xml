@@ -43,4 +43,5 @@
         android:id="@+id/button_dame"
         android:layout_below="@+id/button_beg"
         android:layout_centerHorizontal="true" />
+
 </RelativeLayout>

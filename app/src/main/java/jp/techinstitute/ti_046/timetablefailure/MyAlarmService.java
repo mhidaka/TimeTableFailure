@@ -7,7 +7,13 @@ import android.util.Log;
 
 public class MyAlarmService extends Service {
 
-    AlarmReceiver receiver;
+    private int id;
+
+    @Override
+    public int onStartCommand(Intent intent, int flags, int startId) {
+        id = intent.getIntExtra(DetailActivity.TAG_CLASS_ID, 0);
+        return super.onStartCommand(intent, flags, startId);
+    }
 
     @Override
     public IBinder onBind(Intent intent) {
@@ -24,8 +30,9 @@ public class MyAlarmService extends Service {
     Runnable mTask = new Runnable() {
         @Override
         public void run() {
-            Intent alarmBroadcast = new Intent(); // ここでアラーム受け取るActivity指定
-            alarmBroadcast.setAction("MyAlarmAction"); // sendMyMessage
+            Intent alarmBroadcast = new Intent();
+            alarmBroadcast.setAction("MyAlarmAction");
+            alarmBroadcast.putExtra(DetailActivity.TAG_CLASS_ID, id);
             sendBroadcast(alarmBroadcast);
             MyAlarmService.this.stopSelf();
             Log.v(MyAlarmService.class.getSimpleName(), "SERVICE STOPPED");

@@ -12,6 +12,7 @@ import android.util.Log;
 import android.view.View;
 import android.view.WindowManager;
 import android.widget.Button;
+import android.widget.TextView;
 import android.widget.Toast;
 
 import java.util.List;
@@ -19,7 +20,8 @@ import java.util.List;
 
 public class AlarmActivity extends ActionBarActivity {
 
-    MediaPlayer player;
+    private MediaPlayer player;
+    private int id;
 
     @Override
     protected void onDestroy() {
@@ -47,6 +49,9 @@ public class AlarmActivity extends ActionBarActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_alarm);
+
+        // アラームをセットした授業のid取得
+        id = getIntent().getIntExtra(DetailActivity.TAG_CLASS_ID, 0);
 
         Button btnWakeUp = (Button) findViewById(R.id.button_wakeUp);
         Button btnBeg = (Button) findViewById(R.id.button_beg);
