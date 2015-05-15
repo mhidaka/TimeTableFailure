@@ -60,6 +60,7 @@ public class TableHelper extends SQLiteOpenHelper{
         setDefaultTable(list, db);
     }
 
+    // TODO privateでよくない？
     public ArrayList<ClassTable> setDefaultTable(ArrayList<ClassTable> list, SQLiteDatabase db) {
         for (String time : TIMES) {
             for (String day: DAYS) {
@@ -74,6 +75,7 @@ public class TableHelper extends SQLiteOpenHelper{
         return list;
     }
 
+    // TODO privateでよくない？
     public void createClassTable(ClassTable classTable, SQLiteDatabase db) {
         ContentValues values = new ContentValues();
         values.put(KEY_DAY, classTable.getDay());
@@ -188,6 +190,7 @@ public class TableHelper extends SQLiteOpenHelper{
         return dayAndTime;
     }
 
+    // TODO oldじゃなくてcurrentでは？
     public ClassTable updateClassTable(ClassTable oldClassTable) {
         SQLiteDatabase db = getWritableDatabase();
 

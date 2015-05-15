@@ -19,6 +19,7 @@ import android.widget.Spinner;
 public class MainActivity extends ActionBarActivity implements InputTextListener {
 
     private final String MAIN_FRAGMENT_TAG = MainFragment.class.getName();
+    // TODO クラス変数である必要がないものもたくさんあるので見なおしてみて
     private BlankTextNotify notify = null;
     private FragmentManager manager;
     private FragmentTransaction transaction;
@@ -26,7 +27,7 @@ public class MainActivity extends ActionBarActivity implements InputTextListener
     private TableHelper helper;
     private boolean hasAlarm;
     private ClassTable classTable;
-    private int class_id;
+    private int class_id; // TODO classIdのほうが命名規則一致してる
     private View rootView;
     private Intent intent;
 
@@ -43,6 +44,7 @@ public class MainActivity extends ActionBarActivity implements InputTextListener
         transaction = manager.beginTransaction();
         mainFragment = new MainFragment();
         if (savedInstanceState == null) {
+            // TODO managerもtranscationもここでしか使ってないなら getSupportFragmentManager().beginTransaction().add(...)でよくないかな
             transaction.add(R.id.container, mainFragment
                     , MAIN_FRAGMENT_TAG).commit();
         }
@@ -60,11 +62,15 @@ public class MainActivity extends ActionBarActivity implements InputTextListener
     public boolean onOptionsItemSelected(MenuItem item) {
         int id = item.getItemId();
 
+        // TODO 以下のクラス変数はここに書くこと（メソッド変数としての機能しか必要としていない）
+        // private Spinner spinnerDay, spinnerTime;
+        // private EditText editName, editTeacher;
+
         switch (id) {
             case R.id.action_add_class_table:
                 AlertDialog.Builder addTableBuilder = new AlertDialog.Builder(this);
                 // Layout及びView取得、Dialogにセット
-                // TODO: もっとすっきり取得したい
+                // TODO: もっとすっきり取得したい 名前短くするといいよ。
                 rootView = getLayoutInflater().inflate(R.layout.layout_add_dialog, null);
                 spinnerDay = (Spinner) rootView.findViewById(R.id.spinner_day);
                 spinnerTime = (Spinner) rootView.findViewById(R.id.spinner_time);
@@ -129,7 +135,7 @@ public class MainActivity extends ActionBarActivity implements InputTextListener
                 });
                 addTableBuilder.show();
                 break;
-            case R.id.action_drop_class_table:
+            case R.id.action_drop_class_table: // TODO addの反対はdelete。名前をdropからdeleteに変えた方がいい
                 AlertDialog.Builder deleteDialogBuilder = new AlertDialog.Builder(this);
                 deleteDialogBuilder.setTitle("時間割を削除");
                 deleteDialogBuilder.setMessage("ほんとうに時間割をすべて削除しますか？");
