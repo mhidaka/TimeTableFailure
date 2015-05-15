@@ -1,0 +1,92 @@
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:layout_margin="4dp"
+    tools:context="jp.techinstitute.ti_046.timetablefailure.AttendanceFragment">
+
+    <TextView
+        android:id="@+id/top"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="出席状況"/>
+    <View
+        android:layout_below="@id/top"
+        android:id="@+id/divider"
+        style="@style/divider"/>
+
+    <LinearLayout
+        android:layout_margin="4dp"
+        android:baselineAligned="true"
+        android:id="@+id/layout_pickers"
+        android:layout_below="@id/divider"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="horizontal">
+
+        <LinearLayout
+            android:gravity="center_horizontal"
+            android:id="@+id/layout_attend"
+            android:layout_width="0"
+            android:layout_height="wrap_content"
+            android:layout_weight="1"
+            android:orientation="vertical">
+
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="出席数"/>
+
+            <NumberPicker
+                android:id="@+id/picker_attend"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content">
+
+            </NumberPicker>
+
+        </LinearLayout>
+        <LinearLayout
+            android:gravity="center_horizontal"
+            android:id="@+id/layout_absent"
+            android:layout_width="0"
+            android:layout_height="wrap_content"
+            android:layout_weight="1"
+            android:orientation="vertical">
+
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="欠席数"/>
+
+            <NumberPicker
+                android:id="@+id/picker_absent"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content">
+
+            </NumberPicker>
+
+        </LinearLayout>
+        <LinearLayout
+            android:gravity="center_horizontal"
+            android:id="@+id/layout_late"
+            android:layout_width="0"
+            android:layout_height="wrap_content"
+            android:layout_weight="1"
+            android:orientation="vertical">
+
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="出席数"/>
+
+            <NumberPicker
+                android:id="@+id/picker_late"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content">
+
+            </NumberPicker>
+
+        </LinearLayout>
+    </LinearLayout>
+
+</RelativeLayout>

@@ -1,7 +1,14 @@
 <resources>
 
-    <!--<style name="AppTheme" parent="Theme.AppCompat.Light.DarkActionBar">-->
-    <!--</style>-->
+    <!--UI styles-->
+
+    <style name="divider">
+        <item name="android:layout_width">match_parent</item>
+        <item name="android:layout_height">2dp</item>
+        <item name="android:background">@color/blue_A100</item>
+    </style>
+
+    <!--ActionBar styles-->
 
     <style name="AppTheme" parent="@style/Theme.AppCompat.Light">
         <item name="actionBarItemBackground">@drawable/selectable_background_blue</item>

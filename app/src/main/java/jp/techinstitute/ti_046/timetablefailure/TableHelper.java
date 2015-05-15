@@ -10,6 +10,8 @@ import android.util.Log;
 
 import java.util.ArrayList;
 
+
+// TODO: 出席状況に関するカラム作成
 public class TableHelper extends SQLiteOpenHelper{
 
     public static String[] DAYS = { "月曜", "火曜", "水曜", "木曜", "金曜" };

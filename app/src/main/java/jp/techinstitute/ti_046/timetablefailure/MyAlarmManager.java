@@ -58,7 +58,6 @@ public class MyAlarmManager {
     }
 
     private PendingIntent getPendingIntent() {
-        // アラーム時に起動するアプリケーションを登録
         Intent intent = new Intent(context, MyAlarmService.class);
         intent.putExtra(DetailActivity.TAG_CLASS_ID, id);
         PendingIntent pendingIntent = PendingIntent
